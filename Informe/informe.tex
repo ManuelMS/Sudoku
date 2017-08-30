@@ -1,0 +1,187 @@
+% ======== Plantilla para elaboracion del informe final ========
+% version: 1.0  - Agosto/2017
+% Autores:
+% Dennis Rodríguez - Luis Vásquez - Walter Chaves - Manuel Masís
+% Comentarios y sugerencias en el foro del taller:
+% https://eva.fing.edu.uy/course/view.php?id=307
+% ========================================================
+%
+% ----- INSTRUCCIONES -----
+% Abrir archivos README.txt incluido en *.zip
+% -------------------------
+%
+% ----- LICENCIA -----
+% Este trabajo es distribuido bajo la licencia LaTeX Project Public License
+% Puede y DEBE ser usado, modificado y distribuido gratuitamente.
+
+% --- Clase de archivo ---
+% Con este comando se define que tipo de documento vamos a hacer
+% en este caso un articulo, en una hoja a4 y con tamanio de fuente 12pt.
+\documentclass[a4paper,openright,12pt]{report}
+
+% A partir de aqui se definiran ciertos paquetes o funciones a ser utilizadas
+% dentro del documento.
+
+% --- idioma ---
+% El paquete babel sirve para separar correctamente las palabras en muchos idiomas,
+%aquí esta configurado con español (spanish). Tambien sirve para que el Indice tenga 
+%título "Indice" en lugar de "Contents".
+\usepackage[english]{babel} % espanol
+
+% --- codificacion de archivo ---
+% El paquete inputenc sirve para que el compilador pueda interpretar los acentos
+%en español de forma estandar, dependiendo del sistema operativo hay que darle una
+%configuracion diferente:
+
+%Para windows se escribe:
+%\usepackage[ansinew]{inputenc}
+%\usepackage[latin1]{inputenc} % acentos sin codigo
+\usepackage[utf8]{inputenc}
+
+% --- Gráficos ---
+% El paquete graphicx sirve para controlar figuras con \includegraphics.
+\usepackage{graphicx} % graficos
+
+% --- Hipervínculos ---
+% paquete para marcar los hiperví­nculos en i­ndice y referencias
+\usepackage{hyperref}
+
+% Para agregar al índice las refencias
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+
+% ===== Encabezado =====
+%Esta es una posible configuración para el encabezado. 
+%Si se comentan estas dos lineas no habrá encabezado y la numeración de página aparecerá abajo de cada hoja. En la página donde se llame a \maketitle no se coloca encabezado.
+\pagestyle{myheadings}
+\markright{UNA \hfill Informe final en \LaTeX \hfill}
+% ======================
+
+
+%% ===== Ajuste layout pagina =====
+% define el ancho del texto en la hoja
+\setlength{\textwidth}{155mm}
+% define el alto del texto en la hoja
+\setlength{\textheight}{210mm}
+% los márgenes pueden ser editador con
+\oddsidemargin=-.25cm
+%% ================================
+
+%Aqui comienzan los datos del trabajo. El comando \date{\today} asigna la fecha
+%en que se compila como la fecha del trabajo, tambien se puede escibe directamente
+%Ejemplo: \date{5 de setiembre de 2012}.
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+\vspace*{-1in}
+\begin{figure}[htb]
+\begin{center}
+%Aca se inserta el logo de la U
+\includegraphics[width=6cm]{./logo}
+\end{center}
+\end{figure}
+UNIVERSIDAD NACIONAL\\
+\vspace*{0.15in}
+FACULTAD DE CIENCIAS EXACTAS Y NATURALES\\
+\vspace*{0.15in}
+ESCUELA DE INFORMATICA\\
+\vspace*{0.6in}
+\begin{Large}
+CURSO: PARADIGMAS DE PROGRAMACION\\
+\end{Large}
+\vspace*{0.2in}
+\begin{Large}
+\textbf{INFORME FINAL PROYECTO:}\\
+Algoritmos de Generación y Resolución de Sudokus\\
+\end{Large}
+\vspace*{0.5in}
+\begin{large}
+Profesor:\\
+Carlos Loria Saenz\\
+\end{large}
+\vspace*{0.3in}
+\begin{large}
+Integrantes:\\
+Dennis Rodríguez\\
+Luis Vásquez\\
+Manuel Masís\\
+Walter Chaves\\
+\end{large}
+\vspace*{0.3in}
+\rule{80mm}{0.1mm}\\
+\vspace*{0.1in}
+\begin{large}
+%Aca se inserta el logo de pie de pagina
+Año 2017\includegraphics[width=4cm]{./logoP}
+\date{\today}
+\end{large}
+\end{center}
+
+\end{titlepage}
+
+% índice
+\tableofcontents
+
+% para separar la carátula del texto introducimos un salto de pagina
+\newpage
+
+% definimos una sección con el comando section
+
+\section{Introducción}
+%
+Acá vamos a agregar la introducción respecto al tema que nos atañe, el cual para nuestro caso se refiere a
+la aplicación de algoritmos combinatorios para la generación y resolución de SUDOKUS.
+
+\section{Marco Teórico}
+%
+En esta sección presentaríamos un marco teórico del contenido del trabajo, generalmente debe ser lo mínimo indispensable para obtener los resultados y concluir.
+
+\section{Desarrollo}
+%
+El desarrollo sería una de las partes centrales de un informe o artículo, en este caso presentaremos ejemplos de creación de fórmulas matemáticas con \LaTeX.
+
+\subsection{Fórmulas matemáticas}
+Hay varias maneras de insertar una fórmula matemática en un trabajo. Primero y más fácil es en la misma línea, como por ejemplo: $E=mc^{2}$. También se puede hacer en una línea aparte, sin numerar de esta forma $$E=mc^{2}$$ después se pueden poner en una línea aparte y numerarlas, de esta forma: 
+\begin{equation}\label{ec:Ein}
+  E=mc^{2}
+\end{equation} %
+%
+%cuando se escribe en el entorno \say{equation} es conveniente no dejar un renglón en blanco entre el texto y %el entorno, así LaTeX dejará el espacio adecuado a cada fórmula. Nótese que se utiliza aquí el paquete \texttt{dirtytalk}, en donde \say{se pueden colocar citas \say{dentro de} otras citas}. Se pueden hacer %referencias a todas las etiquetas creadas, por ejemplo a la ecuación~\eqref{ec:Ein} o al \autoref{tab:cuadro_2}, incluso a la sección~\ref{ej_fonts}.
+
+
+\subsection{Imágenes}
+%
+La \autoref{fig:optimo} es una figura de ejemplo, para un formato de la figura jpg, es necesario compilar el documento con el compilador PDFLaTeX, para formatos de figura eps, se puede compilar en Latex.
+\begin{figure}[h!]
+\centering
+%\includegraphics[width=1\textwidth]{figuras/optimo_primal}
+\label{fig:optimo}
+\caption{}
+\end{figure}
+
+\section{Conclusiones}
+%
+Aquí irían las conclusiones del artículo.  Tal vez se quieran mostrar conclusiones de forma esquemática como items...
+%
+\begin{itemize}
+  \item Conclusión numero 1... 
+  \item otra conclusión.
+\end{itemize}
+
+o también enumerándolas
+
+\begin{enumerate}
+  \item item primero...
+  \item item segundo...
+\end{enumerate}
+
+
+\subsection{Citación de bibliografía}
+%
+Es posible citar artículos utilizados como referencia utilizando la función ``cite''. Por ejemplo citamos el libro \cite{lamport94} utilizando la etiqueta lamport94 que fue definida previamente al final del archivo latex como se puede ver en el código de este ejemplo. %
+%
+Se pueden citar tantos artículos como se quiera siempre que estén incluidos en el archivo \cite{otraetiqueta}. Existen otras formas mas complejas de citar en trabajos grandes como tesis o libros, utilizando archivos .bib . % ver http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+
+\end{document}
