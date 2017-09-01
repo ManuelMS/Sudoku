@@ -5,13 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+	<link href="lib/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/Login.css" rel="stylesheet">
+	
+	<script src="lib/js/jquery.min.js"></script>
+	<script src="lib/js/bootstrap.min.js"></script>
+	<script src="js/Login.js"></script>
     
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-    
+	
 	<!-- Angular 2 -->
   </head>
   <body>
@@ -195,7 +196,7 @@
 
 	var SibType = { "Row": 1, "Col": 2, "Square": 3 };
 
-	function Location(row, col) {
+	function Location(row, col){
 		this.row = row;
 		this.col = col;
 	}
@@ -577,12 +578,11 @@
 		  <li><a href="#">Estadística</a></li>		  
 		</ul>
 		<ul class="nav navbar-nav">
-		  <li><a href="#">Instrucciones</a></li>
-		  <li><a href="#">Ayuda</a></li>	  		  
+		  <li><a  class="btn btn-lg" role="button" data-toggle="modal" data-target="#instruccion-modal"href="" ><span class="glyphicon glyphicon-list-alt" ></span> Instrucciones</a></li>
+		  <li><a  class="btn btn-lg" role="button" data-toggle="modal" data-target="#ayuda-modal"href="" ><span class="glyphicon glyphicon-question-sign" ></span> Ayuda</a></li>	  		  
 		</ul>
 		<ul class="nav navbar-nav navbar-right notlogged">
-		  <li><a href="#"><span class="glyphicon glyphicon-user"></span> Regístrate</a></li>
-		  <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Ingresa</a></li>
+		  <li><a  class="btn btn-lg" role="button" data-toggle="modal" data-target="#login-modal"href="" ><span class="glyphicon glyphicon-log-in" ></span> Ingresa</a></li>
 		</ul>
 	  </div>
 	</nav>
@@ -613,25 +613,21 @@
 				<br>
 				<div class="row"> 
 					<div id='sudoku' align="center">
+						<div id="panelMsg" class="alert alert-success alert-dismissable fade in">
+							<b id="message"></b>
+							<button  id="bclose" aria-label="close">&times;</button>
+						</div>
 
 						<div id='main'>
 							<table>
 								<tr>
 								<td>
 									<!--canvas id='canvas2' width='541' height='55' title="Click here to set the currently selected digit">Canvas is not supported by this browser.</canvas-->
-									<canvas id='canvas1' width='541' height='541'>Canvas is not supported by this browser.</canvas>
-								</td>
-								<td style="width: 135px">
-									Show allowed: <input id='chbAllowed' type="checkbox" checked='yes' title='Untick this to hide allowed values'/><br/>
-									Show singles: <input id='chbShowSingles' type="checkbox" checked='yes' title='Untick this to hide naked and hidden singles - these are shown in red'/><br/>
+									<canvas id='canvas' width='541' height='541'>Canvas is not supported by this browser.</canvas>
 								</td>
 								</tr>
 							</table><br><br>						
 						</div>
-						<div class="alert alert-success">
-							<span id="message" ></span>
-						</div>
-
 					</div>
 				</div>				
 				<br>
@@ -674,397 +670,145 @@
 		</div>
 	</div>
 	
-	<script src="js/timer.js"></script>	
-	<script>
-		var timer = new Timer();
-		$( document ).ready(function() {
-			$('#elemenrs').initButtons();
-		});		
-		$("#sel1").change(function(){
-			if(this.value != '9x9'){
-				$('#dificultad').prop("hidden", true);
-			}else{
-				$('#dificultad').prop("hidden", false);
-			}
-		});		
-		$('#startButton').click(function () {
-			timer.start();
-			$('#startButton').prop('disabled', true);	
-			$('#startButton').html('Reanudar');
-			$('#pauseButton').prop('disabled', false);			
-			$('#grid').prop('hidden', false);			
-			$('#PasuedMsg').prop('hidden', true);
-		});
-		$('#pauseButton').click(function () {
-			timer.pause();
-			$('#startButton').prop('disabled', false);
-			$('#pauseButton').prop('disabled', true);			
-			$('#grid').prop('hidden', true);
-			$('#PasuedMsg').prop('hidden', false);
-		});
-		//TIMER
-		timer.addEventListener('secondsUpdated', function (e) {
-			$('#values').html(timer.getTimeValues().toString());
-		});
-		timer.addEventListener('started', function (e) {
-			$('#values').html(timer.getTimeValues().toString());
-		});
-		//TIMER END
-		$('#nuevoJuego').click(function () {
-			var val =  $('#sel1 option:selected').text();
-			val += (val == '9x9')? " " + $('#sel2 option:selected').text() : " Default";
-			$('#size').html(val);
-		});
-		(function( $elements ){
-			$.fn.initButtons = function() {
-				$('#pauseButton').prop('disabled', true);			
-				$('#PasuedMsg').prop('hidden', true);
-				$('.logged').prop('hidden', true);
-				$('#dificultad').prop('hidden', true);
-				$('#message').html('Para Jugar: Cree o Cargue Nuevo Juego');
-				$('#btnClear').prop('disabled', true);
-				$('#btnReset').prop('disabled', true);
-				$('#btnSolve').prop('disabled', true);
-				$('#btnAccept').prop('disabled', true);
-				$('#btnHint').prop('disabled', true);
-				$('#btnUndo').prop('disabled', true);
-			}; 
-		})( jQuery );
-	</script>
-	<script type="text/javascript" >
-	var CellSize = 60;
-	var SubCellSize = 18;
-
-	var canvas1 = document.getElementById("canvas1");
-	//var canvas2 = document.getElementById("canvas2");
-	var chbAllowed = document.getElementById("chbAllowed"); // check box
-	var chbShowSingles = document.getElementById("chbShowSingles"); // check box
-	//var tbSerial = document.getElementById("tbSerial");
-	var extraInfo = document.getElementById("extraInfo");
-
-	var board1 = new Board();
-	var selectRow = 0;
-	var selectCol = 0;
-	var showAllowed = true;
-	var showSingles = true;
-	var undoStack = Array();
-
-	function undo() {
-		var tos = undoStack.pop();
-		if (tos) {
-			board1 = tos;
-			updateUI();
-		}
-	}
-
-	function clearUndo() {
-		undoStack= Array();
-	}
-
-	function pushBoard() {
-		undoStack.push(board1.clone());
-	}
-
-	function checkStatus() {
-		extraInfo.innerHTML = "";
-		if (!board1._isValid)
-			message.innerHTML = "* Incorrecto*";
-		else if (board1._isSolved)
-			message.innerHTML = "* Resuelto *";
-		else
-			message.innerHTML = "";
-	}
-
-	function drawGrid() {
-		// Only ever called once!
-		var context = canvas1.getContext('2d'); 
-		context.strokeStyle = '#808080';
-		for (var i = 0; i <= BoardSize; i++) {
-			context.beginPath();
-			var thick = i % 3 == 0;
-			// Draw vertical lines
-			context.lineWidth = thick ? 2 : 1;
-			context.moveTo(i * CellSize + 0.5, 0.5);
-			context.lineTo(i * CellSize + 0.5, BoardSize * CellSize + 0.5);
-
-			// Draw horizontal lines
-			context.moveTo(0.5, i * CellSize + 0.5);
-			context.lineTo(BoardSize * CellSize + 0.5, i * CellSize + 0.5);
-			context.stroke();
-		}
-	}
-
-	function drawCells() {
-		var context = canvas1.getContext('2d'); 
+	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" align="center">
+					<img id="img_logo" src="img/icon.png">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+				</div>
+                
+                <div id="div-forms">
+					<!-- Login Form -->
+                    <form id="login-form">
+		                <div class="modal-body">
+				    		<div id="div-login-msg">
+                                <div id="icon-login-msg" class="glyphicon glyphicon-chevron-right"></div>
+                                <span id="text-login-msg">Ingrese su nombre de usuario y contraseña.</span>
+                            </div>
+				    		<input id="login_username" class="form-control" type="text" placeholder="Nombre de Usuario" required>
+				    		<input id="login_password" class="form-control" type="password" placeholder="Contraseña" required>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+        		    	</div>
+				        <div class="modal-footer">
+                            <div>
+                                <button type="submit" class="btn btn-success btn-lg btn-block">Login</button>
+                            </div>
+				    	    <div>
+                                <button id="login_register_btn" type="button" class="btn btn-link">Register</button>
+                            </div>
+				        </div>
+                    </form>
+                     <!-- Register Form -->
+                    <form id="register-form" style="display:none;">
+            		    <div class="modal-body">
+		    				<div id="div-register-msg">
+                                <div id="icon-register-msg" class="glyphicon glyphicon-chevron-right"></div>
+                                <span id="text-register-msg">Resgistro de usuario.</span>
+                            </div>
+		    				<input id="register_username" class="form-control" type="text" placeholder="Nombre Usuario" required>
+                            <input id="register_email" class="form-control" type="text" placeholder="Correo Electrónico" required>
+                            <input id="register_password" class="form-control" type="password" placeholder="Contraseña" required>
+            			</div>
+		    		    <div class="modal-footer">
+                            <div>
+                                <button type="submit" class="btn btn-success btn-lg btn-block">Register</button>
+                            </div>
+                            <div>
+                                <button id="register_login_btn" type="button" class="btn btn-link">Log In</button>
+                            </div>
+		    		    </div>
+                    </form>
+                </div>
+            </div>
+		</div>
+	</div>
+	<!--Modal para Instrucciones ***Manuel***-->
+	<div class="modal fade" id="instruccion-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" align="center">
+					<img id="img_logo" src="img/icon.png">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+				</div>
+                
+                <div class="container">
+				  <h2>Como jugar SUDOKU</h2>
+				  <!--<p>Despliegue las instrucciones.</p>-->
+				  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#info">Reglas del sudoku</button>
+				  <button type="button" class="btn btn-regla1" data-toggle="collapse" data-target="#regla1">Regla 1</button>
+				  <button type="button" class="btn btn-regla2" data-toggle="collapse" data-target="#regla2">Regla 2</button>
+				  <button type="button" class="btn btn-regla3" data-toggle="collapse" data-target="#regla3">Regla 3</button>
+				  <button type="button" class="btn btn-regla4" data-toggle="collapse" data-target="#regla4">Regla 4</button>
+				  <button type="button" class="btn btn-regla5" data-toggle="collapse" data-target="#regla5">Regla 5</button>
+				  <div id="info" class="collapse">
+					<br><p>Este juego está compuesto por una cuadrícula de 9x9 casillas,</p>
+					<p>dividida en regiones de 3x3 casillas.</p>
+					<p>Partiendo de algunos números ya dispuestos en algunas de las </p>
+					<p>casillas, hay que completar las casillas vacías con dígitos </p>
+					<p>del 1 al 9, sin que se repitan por fila, columna o región.</p>
+				  </div>
+				  <div id="regla1" class="collapse">
+					<br><p>Hay que completar las casillas vacías con un solo número del 1 al 9.</p>
+				  </div>
+				  <div id="regla2" class="collapse">
+					<br><p>En una misma fila no puede haber números repetidos.</p>
+				  </div>
+				  <div id="regla3" class="collapse">
+					<br><p>En una misma columna no puede haber números repetidos.</p>
+				  </div>
+				  <div id="regla4" class="collapse">
+					<br><p>En una misma región no puede haber números repetidos.</p>
+				  </div>
+				  <div id="regla5" class="collapse">
+					<br><p>La solución de un sudoku es única.</p>
+				  </div>
+				</div>
+            </div>
+		</div>
+	</div>
 	
-		context.font = "12pt Calibri"; // small text
-		context.textAlign = "center";
-		context.textBaseline = "middle";
-		var normalColor = "#aaaaaa";
-		var singleColor = "#ff143c";
-
-		// Draw background for selected cell
-		for (var row = 0; row < BoardSize; row++)
-			for (var col = 0; col < BoardSize; col++) {
-
-				// Draw background of selected cell
-				if (row == selectRow && col == selectCol) {
-					var margin = 2;
-					context.beginPath();
-					context.rect(col * CellSize + margin + 0.5, row * CellSize + margin + 0.5, CellSize - 2 * margin, CellSize - 2 * margin);
-					context.fillStyle = "#ffe4e1";
-					context.fill()
-				}
-			}
-		context.fillStyle = "#999999"; // text color - light
-
-		// Draw allowed values
-		if (showAllowed)
-			for (var row = 0; row < BoardSize; row++)
-				for (var col = 0; col < BoardSize; col++) {
-					var cell = board1.getCell(new Location(row, col));
-					if (!cell.isAssigned()) {
-						var allowedValues = cell._allowed.allowedValuesArray();
-						for (var i = 0; i < allowedValues.length; i++) {
-							var val = allowedValues[i];
-							var x = (col + 0.5) * CellSize; // center of cell for textAlign center, textBaseline middle
-							var y = (row + 0.5) * CellSize;
-							var subRow = Math.floor((val - 1) / 3) - 1;
-							var subCol = Math.floor((val - 1) % 3) - 1;
-							x += subCol * SubCellSize;
-							y += subRow * SubCellSize;
-							var hiddenSingle = allowedValues.length != 1 && val == cell.getAnswer(); // naked single would have only one allowed value
-							context.fillStyle = normalColor; // show hidden single in purple
-							if (showSingles && val == cell.getAnswer())
-								context.fillStyle = singleColor; // show hidden single in purple
-							context.fillText(val, x, y);
-						}
-					}
-				}
-
-		// New if a digit is selected then make all cells with the same digit foreground red
-		var selectCell = board1.getCell(new Location(selectRow, selectCol));
-		var selectValue = selectCell.getValue();
-
-		// Draw values last
-		context.font = "32pt Calibri";
-		context.textAlign = "center";
-		context.textBaseline = "middle";
-		var normalForeColor = "#191929";
-		var sameDigitForeColor = "#F91919";
-		context.fillStyle = normalForeColor; // text color - dark
-		for (var row = 0; row < BoardSize; row++) // funcional
-			for (var col = 0; col < BoardSize; col++) {
-				var cell = board1.getCell(new Location(row, col));
-				var x = (col + 0.5) * CellSize; // center of cell for textAlign center, textBaseline middle
-				var y = (row + 0.5) * CellSize;
-				var sameDigit = cell.getValue() == selectValue && selectValue != 0;
-				// Draw value
-				var value = cell.getValue();
-				if (value != 0) {
-					context.fillStyle = cell.isGiven() ? "#2200aa" : "#696969"; // show "givens" in a darker color
-					if (sameDigit)// then override
-						context.fillStyle = sameDigitForeColor; // text color - dark
-					context.fillText(value, x, y);
-				}
-			}
-	}
-
-	function drawCanvas() {
-		canvas1.width = canvas1.width;
-		drawGrid();
-		drawCells();
-	}
-
-	function updateUI() {
-		drawCanvas();
-		checkStatus();
-		//tbSerial.value = board1.toString();
-	}
-
-	function readOptions() {
-		showAllowed = chbAllowed.checked;
-		showSingles = chbShowSingles.checked;
-		drawCanvas();
-	}
-
-	chbAllowed.onclick = readOptions;
-	chbShowSingles.onclick = readOptions;
-
-	function selectCell(row, col) {
-		selectRow = row;
-		selectCol = col;
-		drawCanvas();
-	}
-
-	function moveSelection(row, col) { 
-		selectRow += row;
-		selectCol += col;
-		if (selectRow < 0 ) selectRow = 8;
-		else if (selectRow > 8) selectRow = 0;
-		if (selectCol < 0) selectCol = 8;
-		else if (selectCol > 8)	selectCol = 0;
-		drawCanvas();
-		/* 
-			selectRow = (selectRow < 0 )? 8 : (selectRow > 8)? 0: selectRow;
-			selectCol = (selectCol < 0 )? 8 : (selectCol > 8)? 0: selectCol;
-			drawCanvas();
-		*/
-	}
-
-	function setDigitInCell(digit) {
-		var cell = board1.getCell(new Location(selectRow, selectCol));
-		message.innerHTML = "";
-		if (cell.isGiven())
-			return;
-		if (digit != 0 && !cell.isAllowed(digit)) {
-			message.innerHTML = "Digit not allowed";
-			return;
-		}
-		pushBoard();
-		cell.setValue(digit);
-		board1.updateAllowed();
-		updateUI();
-	}
-
-	canvas1.onmousedown = function canvasMouseDown(ev) {
-		var x = ev.pageX - this.offsetLeft;
-		var y = ev.pageY - this.offsetTop;
-		var coords = this.relMouseCoords(ev);
-		selectCell(Math.floor(coords.y / CellSize), Math.floor(coords.x / CellSize));
-	}
-
-	document.onkeydown = function (ev) {
-		switch (ev.keyCode) {
-			case 37: // left arrow
-				moveSelection(0, -1);
-				break;
-			case 38: // up arrow
-				moveSelection(-1, 0);
-				break;
-			case 39: // right arrow
-				moveSelection(0, 1);
-				break;
-			case 40: // down arrow
-				moveSelection(1, 0);
-				break;
-			default:
-				var key = Number(ev.keyCode);
-				var digit = key >= 96 ? key - 96 : key - 48;// handle keypad digits as well
-				if (digit >= 0 && digit <= 9)
-					setDigitInCell(digit);
-				break;
-		}
-	}
-
-	function loadText() {
-		/*
-			traer el texto del modal donde se importa del modal
-		*/
-		//var ret = board1.setString(tbSerial.value);
-		updateUI();
-		if (!ret)
-			message.innerHTML = "String is not of length 81";
-	}
-
-	function clearGame() {
-		clearUndo();
-		board1.clear();
-		updateUI();
-	}
-
-	function acceptPossibles() {
-		pushBoard();
-		board1.acceptPossibles();
-		board1.updateAllowed();
-		updateUI();
-	}
-
-	function hint() {
-		// First check if we had calculated a solution, if not do so now
-		solution = board1.clone();
-		if (solution.trySolve(Location.empty, 0)) {
-			// There is a solution to the board from its current state
-			var cell = solution.getCell(new Location(selectRow, selectCol));
-			if (!cell.isGiven())
-				setDigitInCell(cell.getValue());
-		}
-	}
-
-	function reset() {
-		clearUndo();
-		board1.reset();
-		updateUI();
-	}
-
-	function solve() {
-		pushBoard();
-		var n = new Date();           // Grab new copy of date
-		var s = n.getTime();          // Grab current millisecond #
-		board1.trySolve(Location.empty, 0);
-		var diff = new Date().getTime() - s;
-		updateUI();
-		extraInfo.innerHTML = "Solve took " + String(diff) + " milliseconds";
-	}
-
-	//http://magictour.free.fr/sudoku.htm for list of hard Sudoku puzzles
-	// http://www.sudokuwiki.org/sudoku.htm good on-line solver accepting serial format
-	//board1.setString("................................................................................."); // medium
-	board1.setString("6.81..........72.............3.5..615....4..........8.47....5.....63.....2......."); // medium
-	updateUI();
-	var digCellSize = 54;
-
-	// New stuff - draw a digit selector in canvas above board
-	//function initDigitSource() {
-		// Only ever called once!
-		/*
-		var context = canvas2.getContext('2d');
-		context.strokeStyle = '#808080';
-		var SourceSize = BoardSize + 1;
-		for (var i = 0; i <= SourceSize; i++) {
-			context.beginPath();
-			// Draw vertical lines
-			context.lineWidth = 1;
-			context.moveTo(i * digCellSize + 0.5, 0.5);
-			context.lineTo(i * digCellSize + 0.5, digCellSize + 0.5);
-			context.stroke();
-		}
-		for (var i = 0; i <= 1; i++) {
-			context.beginPath();
-			// Draw horizontal lines
-			context.lineWidth = 1;
-			context.moveTo(0.5, i * digCellSize + 0.5);
-			context.lineTo(SourceSize * digCellSize + 0.5, i * digCellSize + 0.5);
-			context.stroke();
-		}
-		context.font = "24pt Calibri";
-		context.textAlign = "center";
-		context.textBaseline = "middle";
-		var normalForeColor = "#708090";
-		context.fillStyle = normalForeColor; // text color - dark
-		for (var col = 0; col < SourceSize; col++) {
-			var x = (col + 0.5) * digCellSize; // center of cell for textAlign center, textBaseline middle
-			var y = 0.5 * digCellSize;
-			var value = col < 9 ? col + 1 : "Del";
-			context.fillStyle = normalForeColor; // show "givens" in a darker color
-			context.fillText(value, x, y);
-		}
-
-	}*/
-	//initDigitSource();
-
-	/*canvas2.onmousedown = function canvasMouseDown(ev) {
-		var x = ev.pageX - this.offsetLeft;
-		var y = ev.pageY - this.offsetTop;
-		var coords = this.relMouseCoords(ev);
-		var dig = Math.floor(coords.x / digCellSize) + 1;
-		if (dig == 10)
-			dig = 0;
-		setDigitInCell(dig);
-	}
-	*/
-
-
-</script>
+	<!--Modal para Ayuda ***Manuel***-->
+	<div class="modal fade" id="ayuda-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" align="center">
+					<img id="img_logo" src="img/icon.png">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+				</div>
+                
+                <div class="container">
+				  <h2>Funciones de cada boton</h2>
+				  <!--<p>Despliegue las instrucciones.</p>-->
+				  <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" data-content="Elimina del tablero el ultimo numero que digito.">Limpia</button>
+				  <button type="button" class="btn btn-carga" data-toggle="popover" data-trigger="hover" data-content="Carga una partida guardada o crea un nuevo juego.">Carga</button>
+				  <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" data-content="Establece los valores del tablero a su estado inicial.">Reset</button>
+				  <button type="button" class="btn btn-resuelve" data-toggle="popover" data-trigger="hover" data-content="Muestra la solución del juego actual.">Resuelve</button>
+				  <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" data-content="Acepta posibilidades.">Acepta</button>
+				  <button type="button" class="btn btn-pista" data-toggle="popover" data-trigger="hover" data-content="Le brinda al jugador una pista de la partida actual.">Pista</button>
+				  <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" data-content="Se devuelve a la jugada anterior.">Atras</button>
+				</div>
+            </div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(function(){
+			$('[data-toggle="popover"]').popover();   
+		});
+	</script>
+	<script src="js/timer.js"></script>	
+	<script src="js/Game.js"></script>	
+	<script src="js/Control.js"></script>	
+	
   </body>
 </html>
